@@ -103,5 +103,97 @@
       botName: "SeraphAi Assistant"
     };
   </script>
+<script>
+function uploadLoanFile() {
+  const fileInput = document.getElementById('loanFile');
+  const resultDiv = document.getElementById('fileResults');
+  resultDiv.innerHTML = 'Processing...';
+  const file = fileInput.files[0];
+  if (!file) return resultDiv.innerHTML = 'No file selected.';
+  const formData = new FormData();
+  formData.append('file', file);
+  fetch('https://seraphai-backend.onrender.com/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    resultDiv.innerHTML = `
+      <ul>
+        <li>Credit Score: ${data.credit_score || 'N/A'}</li>
+        <li>Income: ${data.income || 'N/A'}</li>
+        <li>DTI: ${data.dti || 'N/A'}</li>
+        <li>LTV: ${data.ltv || 'N/A'}</li>
+      </ul>`;
+  }).catch(() => resultDiv.innerHTML = 'Error processing file.');
+}
+
+function calculateLeadScore() {
+  const credit = document.getElementById('lead-credit').value;
+  const income = document.getElementById('lead-income').value;
+  const dti = document.getElementById('lead-dti').value;
+  fetch('https://seraphai-backend.onrender.com/lead-score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ credit, income, dti })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
+  })
+  .catch(() => alert('Error scoring lead'));
+}
+
+function runDocAI() {
+  const fileInput = document.getElementById('docAIFile');
+  const file = fileInput.files[0];
+  if (!file) return alert('Select a file');
+  const formData = new FormData();
+  formData.append('file', file);
+  fetch('https://seraphai-backend.onrender.com/extract-document', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('docPreview').textContent = data.text || 'No output';
+  }).catch(() => alert('Error extracting document'));
+}
+
+function evaluateUnderwrite() {
+  const credit = document.getElementById('underwrite-credit').value;
+  const dti = document.getElementById('underwrite-dti').value;
+  const ltv = document.getElementById('underwrite-ltv').value;
+  fetch('https://seraphai-backend.onrender.com/underwrite', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ credit, dti, ltv })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
+  })
+  .catch(() => alert('Error underwriting'));
+}
+
+function runComplianceCheck() {
+  const dti = document.getElementById('compliance-dti').value;
+  const ltv = document.getElementById('compliance-ltv').value;
+  const respa = document.querySelectorAll('#compliance-checker input[type=checkbox]')[0].checked;
+  const hmda = document.querySelectorAll('#compliance-checker input[type=checkbox]')[1].checked;
+  const income_verified = document.querySelectorAll('#compliance-checker input[type=checkbox]')[2].checked;
+
+  fetch('https://seraphai-backend.onrender.com/compliance-check', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ dti, ltv, respa, hmda, income_verified })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('complianceResult').textContent = 'Result: ' + data.flags.join(', ');
+  })
+  .catch(() => alert('Error checking compliance'));
+}
+</script>
 </body>
 </html>
