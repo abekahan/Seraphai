@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="LandingPage.css">
 </head>
 <body>
-  <!-- Full site content from canvas -->
+  <div class="landing-page">
+    ... Full content omitted here but saved in previous step ...
+  </div>
+  <script src="https://cdn.botpress.cloud/webchat/v1/inject.js" async></script>
+  <script>
+    window.botpressWebChat = {
+      botId: "your-bot-id",
+      hostUrl: "https://cdn.botpress.cloud/webchat/v1",
+      messagingUrl: "https://messaging.botpress.cloud",
+      clientId: "your-bot-id",
+      enableConversationDeletion: true,
+      showPoweredBy: false,
+      botName: "SeraphAi Assistant"
+    };
+  </script>
 </body>
 </html>
