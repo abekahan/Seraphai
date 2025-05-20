@@ -46,17 +46,17 @@
 
         <div class="bg-white p-6 rounded-lg shadow">
           <h3 class="font-semibold text-lg mb-2">Underwriting Assistant</h3>
-          <input type="number" placeholder="Credit Score" class="input mb-1">
-          <input type="number" placeholder="DTI (%)" class="input mb-1">
-          <input type="number" placeholder="LTV (%)" class="input mb-2">
+          <input type="number" id="underwrite-credit" placeholder="Credit Score" class="input mb-1">
+          <input type="number" id="underwrite-dti" placeholder="DTI (%)" class="input mb-1">
+          <input type="number" id="underwrite-ltv" placeholder="LTV (%)" class="input mb-2">
           <button onclick="evaluateUnderwrite()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Evaluate</button>
           <p id="underwriteDecision" class="mt-2 text-sm"></p>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div id="compliance-checker" class="bg-white p-6 rounded-lg shadow">
           <h3 class="font-semibold text-lg mb-2">Compliance Checker</h3>
-          <input type="number" placeholder="DTI (%)" class="input mb-1">
-          <input type="number" placeholder="LTV (%)" class="input mb-1">
+          <input type="number" id="compliance-dti" placeholder="DTI (%)" class="input mb-1">
+          <input type="number" id="compliance-ltv" placeholder="LTV (%)" class="input mb-1">
           <label class="block text-sm"><input type="checkbox" class="mr-1"> RESPA Disclosure Sent</label>
           <label class="block text-sm"><input type="checkbox" class="mr-1"> HMDA Race Reported</label>
           <label class="block text-sm mb-2"><input type="checkbox" class="mr-1"> Income Verified</label>
@@ -120,7 +120,15 @@ function calculateLeadScore() {
 
   fetch('https://seraphai-backend.onrender.com/lead-score', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ credit, income, dti })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
+  })
+  .catch(() => alert('Error scoring lead'));
+},
     body: JSON.stringify({ credit, income, dti })
   })
   .then(res => res.json())
@@ -147,7 +155,9 @@ function runDocAI() {
 }
 
 function evaluateUnderwrite() {
-  const [credit, dti, ltv] = Array.from(document.querySelectorAll('.tool-card:nth-of-type(3) input')).map(i => i.value);
+  const credit = document.getElementById('underwrite-credit').value;
+  const dti = document.getElementById('underwrite-dti').value;
+  const ltv = document.getElementById('underwrite-ltv').value;
   fetch('https://seraphai-backend.onrender.com/underwrite', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -157,14 +167,33 @@ function evaluateUnderwrite() {
   .then(data => {
     document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
   }).catch(() => alert('Error underwriting'));
+},
+    body: JSON.stringify({ credit, dti, ltv })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
+  }).catch(() => alert('Error underwriting'));
 }
 
 function runComplianceCheck() {
-  const inputs = document.querySelectorAll('.tool-card:nth-of-type(4) input');
-  const [dti, ltv, respa, hmda, income_verified] = [inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]];
+  const dti = document.getElementById('compliance-dti').value;
+  const ltv = document.getElementById('compliance-ltv').value;
+  const respa = document.querySelectorAll('#compliance-checker input[type=checkbox]')[0].checked;
+  const hmda = document.querySelectorAll('#compliance-checker input[type=checkbox]')[1].checked;
+  const income_verified = document.querySelectorAll('#compliance-checker input[type=checkbox]')[2].checked;
+
   fetch('https://seraphai-backend.onrender.com/compliance-check', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ dti, ltv, respa, hmda, income_verified })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('complianceResult').textContent = 'Result: ' + data.flags.join(', ');
+  })
+  .catch(() => alert('Error checking compliance'));
+},
     body: JSON.stringify({
       dti: dti.value,
       ltv: ltv.value,
