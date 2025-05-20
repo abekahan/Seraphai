@@ -2,184 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SeraphAi</title>
-  <link rel="stylesheet" href="LandingPage.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="landing-page">
-    <header class="header">
-      <h1>Mortgage AI That Actually Works</h1>
-      <p>End-to-end automation for sales and operations — trusted by modern lenders</p>
-      <a class="cta-btn" href="#demo">Book a Demo</a>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="text-center mb-16">
+      <h1 class="text-4xl font-bold text-gray-900">Mortgage AI That Actually Works</h1>
+      <p class="mt-4 text-lg text-gray-600">End-to-end automation for sales and operations — trusted by modern lenders</p>
+      <a href="#demo" class="mt-6 inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">Book a Demo</a>
     </header>
 
-    <!-- Upload File Section -->
-    <section>
-      <h2>Upload Loan File</h2>
-      <p>Upload a FNMA 3.2 or MISMO file (.txt or .xml) to automatically extract borrower data and run it through our AI tools.</p>
-      <input type="file" id="loanFile" accept=".txt,.xml,.pdf">
-      <button onclick="uploadLoanFile()">Process File</button>
-      <div id="fileResults"></div>
-
-      <script>
-        async function uploadLoanFile() {
-          const fileInput = document.getElementById('loanFile');
-          const resultDiv = document.getElementById('fileResults');
-          resultDiv.innerHTML = 'Processing...';
-
-          const file = fileInput.files[0];
-          if (!file) {
-            resultDiv.innerHTML = 'Please select a file first.';
-            return;
-          }
-
-          const formData = new FormData();
-          formData.append('file', file);
-
-          try {
-            const response = await fetch('https://your-flask-api-url/upload', {
-              method: 'POST',
-              body: formData
-            });
-            const data = await response.json();
-            resultDiv.innerHTML = `
-              <p><strong>Extracted Data:</strong></p>
-              <ul>
-                <li>Credit Score: ${data.credit_score || 'N/A'}</li>
-                <li>Income: ${data.income || 'N/A'}</li>
-                <li>DTI: ${data.dti || 'N/A'}</li>
-                <li>LTV: ${data.ltv || 'N/A'}</li>
-              </ul>
-            `;
-          } catch (err) {
-            console.error(err);
-            resultDiv.innerHTML = 'An error occurred while processing the file.';
-          }
-        }
-      </script>
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-2">Upload Loan File</h2>
+      <p class="text-gray-600 mb-4">Upload a FNMA 3.2 or MISMO file (.txt, .xml, .pdf, .jpeg) to extract borrower data.</p>
+      <input type="file" id="loanFile" accept=".txt,.xml,.pdf,.jpeg" class="mb-2">
+      <button onclick="uploadLoanFile()" class="bg-blue-600 text-white px-4 py-2 rounded">Process File</button>
+      <div id="fileResults" class="mt-4 text-sm text-gray-700"></div>
     </section>
 
-    <!-- Problem -->
-    <section>
-      <h2>The Problem</h2>
-      <p>Loan officers waste 40% of their time on manual work. Documents take days to process. Compliance errors create risk. SeraphAi solves all of it with AI.</p>
-    </section>
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-4">What We Offer</h2>
+      <div class="grid gap-6 md:grid-cols-2">
 
-    <!-- Tools -->
-    <section>
-      <h2>What We Offer</h2>
-      <div class="tool-list">
-
-        <!-- Lead Scoring -->
-        <div class="tool-card">
-          <h3 class="collapsible">Lead Scoring ▼</h3>
-          <div class="tool-content">
-            <p>Enter lead info to get a score (0–1):</p>
-            <input type="number" placeholder="Credit Score">
-            <input type="number" placeholder="Annual Income ($)">
-            <input type="number" placeholder="DTI Ratio (%)">
-            <button>Calculate Score</button>
-          </div>
+        <!-- Tool Card Template -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="font-semibold text-lg mb-2">Lead Scoring</h3>
+          <p class="text-sm mb-2">Enter info to get a score (0–1):</p>
+          <input type="number" placeholder="Credit Score" class="input mb-1">
+          <input type="number" placeholder="Annual Income ($)" class="input mb-1">
+          <input type="number" placeholder="DTI Ratio (%)" class="input mb-2">
+          <button onclick="calculateLeadScore()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Calculate Score</button>
+          <p id="leadScoreOutput" class="mt-2 text-sm"></p>
         </div>
 
-        <!-- Document AI -->
-        <div class="tool-card">
-          <h3 class="collapsible">Document AI ▼</h3>
-          <div class="tool-content">
-            <p>Upload a sample mortgage document (.txt):</p>
-            <input type="file" accept=".txt">
-            <div>
-              <h4>Extracted Fields:</h4>
-              <pre>[Simulated Field Output]</pre>
-            </div>
-          </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="font-semibold text-lg mb-2">Document AI</h3>
+          <input type="file" id="docAIFile" accept=".txt,.pdf,.jpeg" class="mb-2">
+          <button onclick="runDocAI()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Extract</button>
+          <pre id="docPreview" class="mt-2 bg-gray-100 p-2 rounded text-xs">[Waiting for upload]</pre>
         </div>
 
-        <!-- Underwriting -->
-        <div class="tool-card">
-          <h3 class="collapsible">Underwriting Assistant ▼</h3>
-          <div class="tool-content">
-            <p>Enter loan data to simulate underwriting decision:</p>
-            <input type="number" placeholder="Credit Score">
-            <input type="number" placeholder="DTI (%)">
-            <input type="number" placeholder="LTV (%)">
-            <button>Evaluate</button>
-            <p>Decision: [Simulated Decision]</p>
-          </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="font-semibold text-lg mb-2">Underwriting Assistant</h3>
+          <input type="number" placeholder="Credit Score" class="input mb-1">
+          <input type="number" placeholder="DTI (%)" class="input mb-1">
+          <input type="number" placeholder="LTV (%)" class="input mb-2">
+          <button onclick="evaluateUnderwrite()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Evaluate</button>
+          <p id="underwriteDecision" class="mt-2 text-sm"></p>
         </div>
 
-        <!-- RPA -->
-        <div class="tool-card">
-          <h3 class="collapsible">RPA Automation ▼</h3>
-          <div class="tool-content">
-            <p>Here's how SeraphAi bots automate your loan workflow:</p>
-            <ol>
-              <li><strong>Bot 1:</strong> Receives application and creates file in LOS</li>
-              <li><strong>Bot 2:</strong> Extracts and classifies uploaded documents</li>
-              <li><strong>Bot 3:</strong> Triggers credit and appraisal services</li>
-              <li><strong>Bot 4:</strong> Flags missing items and notifies users</li>
-              <li><strong>Bot 5:</strong> Updates CRM and milestone tracking</li>
-            </ol>
-            <p><em>All without human intervention.</em></p>
-          </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="font-semibold text-lg mb-2">Compliance Checker</h3>
+          <input type="number" placeholder="DTI (%)" class="input mb-1">
+          <input type="number" placeholder="LTV (%)" class="input mb-1">
+          <label class="block text-sm"><input type="checkbox" class="mr-1"> RESPA Disclosure Sent</label>
+          <label class="block text-sm"><input type="checkbox" class="mr-1"> HMDA Race Reported</label>
+          <label class="block text-sm mb-2"><input type="checkbox" class="mr-1"> Income Verified</label>
+          <button onclick="runComplianceCheck()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Run Check</button>
+          <p id="complianceResult" class="mt-2 text-sm"></p>
         </div>
-
-        <!-- Compliance Checker -->
-        <div class="tool-card">
-          <h3 class="collapsible">Compliance Checker ▼</h3>
-          <div class="tool-content">
-            <p>Enter loan info for compliance check:</p>
-            <input type="number" placeholder="DTI (%)">
-            <input type="number" placeholder="LTV (%)">
-            <label><input type="checkbox"> RESPA Disclosure Sent</label><br>
-            <label><input type="checkbox"> HMDA Race Reported</label><br>
-            <label><input type="checkbox"> Income Verified</label><br>
-            <button>Run Check</button>
-            <p>[Flags or Compliant Result]</p>
-          </div>
-        </div>
-
-        <!-- Chatbot -->
-        <div class="tool-card">
-          <h3 class="collapsible">Chatbot Assistant ▼</h3>
-          <div class="tool-content">
-            <p>Chat with our AI assistant in the bottom right corner for guideline help and support.</p>
-          </div>
-        </div>
-
       </div>
     </section>
 
-    <!-- Why SeraphAi -->
-    <section>
-      <h2>Why SeraphAi</h2>
-      <p>Faster closings. Fewer errors. Better margins. No more swivel-chair workflows.</p>
-    </section>
-
-    <!-- Demo Form -->
-    <section id="demo">
-      <h2>Request a Demo</h2>
-      <form action="https://formspree.io/f/mexample" method="POST">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Tell us about your team or ask a question..." rows="4" required></textarea>
-        <button type="submit">Submit Request</button>
+    <section id="demo" class="mb-16">
+      <h2 class="text-2xl font-semibold mb-2">Request a Demo</h2>
+      <form action="https://formspree.io/f/mexample" method="POST" class="space-y-2">
+        <input type="text" name="name" placeholder="Your Name" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="email" name="email" placeholder="Your Email" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <textarea name="message" placeholder="Tell us about your team..." rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Submit Request</button>
       </form>
     </section>
 
-    <!-- About -->
-    <section id="about">
-      <h2>About Us</h2>
-      <p><strong>Abe Kahan</strong>, founder of SeraphAi, is a proven entrepreneur and financial technology executive with deep experience across mortgage banking, proptech, and AI-driven automation.</p>
-      <p><a href="https://www.linkedin.com/in/abe-kahan/" target="_blank">Connect on LinkedIn</a></p>
+    <section id="about" class="mb-16">
+      <h2 class="text-2xl font-semibold mb-2">About Us</h2>
+      <p class="mb-2">Abe Kahan, founder of SeraphAi, is a proven entrepreneur and financial technology executive with deep experience across mortgage banking, proptech, and AI-driven automation.</p>
+      <p class="mb-2">He has served in leadership roles across originations, capital markets, and enterprise lending systems, including founding successful fintech ventures and consulting for top firms.</p>
+      <p><a href="https://www.linkedin.com/in/abe-kahan/" class="text-blue-600 hover:underline" target="_blank">Connect on LinkedIn</a></p>
     </section>
 
-    <footer class="footer">
+    <footer class="text-center text-sm text-gray-500 border-t pt-6">
       &copy; 2025 SeraphAi. All rights reserved.
     </footer>
   </div>
 
+  <script>
+    function uploadLoanFile() {
+  const fileInput = document.getElementById('loanFile');
+  const resultDiv = document.getElementById('fileResults');
+  resultDiv.innerHTML = 'Processing...';
+  const file = fileInput.files[0];
+  if (!file) return resultDiv.innerHTML = 'No file selected.';
+  const formData = new FormData();
+  formData.append('file', file);
+  fetch('https://seraphai-backend.onrender.com/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    resultDiv.innerHTML = `
+      <ul>
+        <li>Credit Score: ${data.credit_score || 'N/A'}</li>
+        <li>Income: ${data.income || 'N/A'}</li>
+        <li>DTI: ${data.dti || 'N/A'}</li>
+        <li>LTV: ${data.ltv || 'N/A'}</li>
+      </ul>`;
+  }).catch(() => resultDiv.innerHTML = 'Error processing file.');
+}
+
+function calculateLeadScore() {
+  const [credit, income, dti] = Array.from(document.querySelectorAll('.tool-card:nth-of-type(1) input')).map(i => i.value);
+  fetch('https://seraphai-backend.onrender.com/lead-score', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ credit, income, dti })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
+  }).catch(() => alert('Error scoring lead'));
+}
+
+function runDocAI() {
+  const fileInput = document.getElementById('docAIFile');
+  const file = fileInput.files[0];
+  if (!file) return alert('Select a file');
+  const formData = new FormData();
+  formData.append('file', file);
+  fetch('https://seraphai-backend.onrender.com/extract-document', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('docPreview').textContent = data.text || 'No output';
+  }).catch(() => alert('Error extracting document'));
+}
+
+function evaluateUnderwrite() {
+  const [credit, dti, ltv] = Array.from(document.querySelectorAll('.tool-card:nth-of-type(3) input')).map(i => i.value);
+  fetch('https://seraphai-backend.onrender.com/underwrite', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ credit, dti, ltv })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
+  }).catch(() => alert('Error underwriting'));
+}
+
+function runComplianceCheck() {
+  const inputs = document.querySelectorAll('.tool-card:nth-of-type(4) input');
+  const [dti, ltv, respa, hmda, income_verified] = [inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]];
+  fetch('https://seraphai-backend.onrender.com/compliance-check', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      dti: dti.value,
+      ltv: ltv.value,
+      respa: respa.checked,
+      hmda: hmda.checked,
+      income_verified: income_verified.checked
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('complianceResult').textContent = 'Result: ' + data.flags.join(', ');
+  }).catch(() => alert('Error checking compliance'));
+}
+  </script>
   <script src="https://cdn.botpress.cloud/webchat/v1/inject.js" async></script>
   <script>
     window.botpressWebChat = {
