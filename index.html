@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeraphAi</title>
+  <link rel="stylesheet" href="LandingPage.css">
+</head>
+<body>
+  <div class="landing-page">
+    ...content from canvas...
+  </div>
+  <script src="https://cdn.botpress.cloud/webchat/v1/inject.js" async></script>
+  <script>
+    window.botpressWebChat = {
+      botId: "your-bot-id",
+      hostUrl: "https://cdn.botpress.cloud/webchat/v1",
+      messagingUrl: "https://messaging.botpress.cloud",
+      clientId: "your-bot-id",
+      enableConversationDeletion: true,
+      showPoweredBy: false,
+      botName: "SeraphAi Assistant"
+    };
+  </script>
+</body>
+</html>
