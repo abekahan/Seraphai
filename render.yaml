@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: seraphai-backend
+    env: python
+    buildCommand: ""
+    startCommand: "python seraphai_backend_full.py"
+    plan: free
