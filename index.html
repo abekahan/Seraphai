@@ -30,9 +30,9 @@
         <div class="bg-white p-6 rounded-lg shadow">
           <h3 class="font-semibold text-lg mb-2">Lead Scoring</h3>
           <p class="text-sm mb-2">Enter info to get a score (0–1):</p>
-          <input type="number" placeholder="Credit Score" class="input mb-1">
-          <input type="number" placeholder="Annual Income ($)" class="input mb-1">
-          <input type="number" placeholder="DTI Ratio (%)" class="input mb-2">
+          <input type="number" id="lead-credit" placeholder="Credit Score" class="input mb-1">
+          <input type="number" id="lead-income" placeholder="Annual Income ($)" class="input mb-1">
+          <input type="number" id="lead-dti" placeholder="DTI Ratio (%)" class="input mb-2">
           <button onclick="calculateLeadScore()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Calculate Score</button>
           <p id="leadScoreOutput" class="mt-2 text-sm"></p>
         </div>
@@ -114,7 +114,10 @@
 }
 
 function calculateLeadScore() {
-  const [credit, income, dti] = Array.from(document.querySelectorAll('.tool-card:nth-of-type(1) input')).map(i => i.value);
+  const credit = document.getElementById('lead-credit').value;
+  const income = document.getElementById('lead-income').value;
+  const dti = document.getElementById('lead-dti').value;
+
   fetch('https://seraphai-backend.onrender.com/lead-score', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -123,7 +126,8 @@ function calculateLeadScore() {
   .then(res => res.json())
   .then(data => {
     document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
-  }).catch(() => alert('Error scoring lead'));
+  })
+  .catch(() => alert('Error scoring lead'));
 }
 
 function runDocAI() {
