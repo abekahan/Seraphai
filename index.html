@@ -1,48 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SeraphAi</title>
   <link rel="stylesheet" href="LandingPage.css">
 </head>
 <body>
   <div class="landing-page">
-    <div class="header">
-      <h1>Welcome to SeraphAi</h1>
-      <p>Your AI-powered digital assistant.</p>
-    </div>
-    <main>
-      <section class="features">
-        <h2>Features</h2>
-        <ul>
-          <li>Instant answers to your questions</li>
-          <li>Smart recommendations</li>
-          <li>Seamless integration</li>
-        </ul>
-      </section>
-      <section class="cta">
-        <h2>Get Started</h2>
-        <a href="#signup" class="cta-btn">Sign Up Now</a>
-      </section>
-    </main>
-    <div class="footer">
-      <p>&copy; 2025 SeraphAi. All rights reserved.</p>
-    </div>
+    <header class="header">
+      <h1>Mortgage AI That Actually Works</h1>
+      <p>End-to-end automation for sales and operations — trusted by modern lenders</p>
+      <a class="cta-btn" href="#demo">Book a Demo</a>
+    </header>
+
+    <!-- Upload File Section -->
+    <section>
+      <h2>Upload Loan File</h2>
+      <p>Upload a FNMA 3.2 or MISMO file (.txt or .xml) to automatically extract borrower data and run it through our AI tools.</p>
+      <input type="file" id="loanFile" accept=".txt,.xml,.pdf">
+      <button onclick="uploadLoanFile()">Process File</button>
+      <div id="fileResults"></div>
+
+      <script>
+        async function uploadLoanFile() {
+          const fileInput = document.getElementById('loanFile');
+          const resultDiv = document.getElementById('fileResults');
+          resultDiv.innerHTML = 'Processing...';
+
+          const file = fileInput.files[0];
+          if (!file) {
+            resultDiv.innerHTML = 'Please select a file first.';
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('file', file);
+
+          try {
+            const response = await fetch('https://your-flask-api-url/upload', {
+              method: 'POST',
+              body: formData
+            });
+            const data = await response.json();
+            resultDiv.innerHTML = `
+              <p><strong>Extracted Data:</strong></p>
+              <ul>
+                <li>Credit Score: ${data.credit_score || 'N/A'}</li>
+                <li>Income: ${data.income || 'N/A'}</li>
+                <li>DTI: ${data.dti || 'N/A'}</li>
+                <li>LTV: ${data.ltv || 'N/A'}</li>
+              </ul>
+            `;
+          } catch (err) {
+            console.error(err);
+            resultDiv.innerHTML = 'An error occurred while processing the file.';
+          }
+        }
+      </script>
+    </section>
+
+    <!-- Problem -->
+    <section>
+      <h2>The Problem</h2>
+      <p>Loan officers waste 40% of their time on manual work. Documents take days to process. Compliance errors create risk. SeraphAi solves all of it with AI.</p>
+    </section>
+
+    <!-- Tools -->
+    <section>
+      <h2>What We Offer</h2>
+      <div class="tool-list">
+
+        <!-- Lead Scoring -->
+        <div class="tool-card">
+          <h3 class="collapsible">Lead Scoring ▼</h3>
+          <div class="tool-content">
+            <p>Enter lead info to get a score (0–1):</p>
+            <input type="number" placeholder="Credit Score">
+            <input type="number" placeholder="Annual Income ($)">
+            <input type="number" placeholder="DTI Ratio (%)">
+            <button>Calculate Score</button>
+          </div>
+        </div>
+
+        <!-- Document AI -->
+        <div class="tool-card">
+          <h3 class="collapsible">Document AI ▼</h3>
+          <div class="tool-content">
+            <p>Upload a sample mortgage document (.txt):</p>
+            <input type="file" accept=".txt">
+            <div>
+              <h4>Extracted Fields:</h4>
+              <pre>[Simulated Field Output]</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Underwriting -->
+        <div class="tool-card">
+          <h3 class="collapsible">Underwriting Assistant ▼</h3>
+          <div class="tool-content">
+            <p>Enter loan data to simulate underwriting decision:</p>
+            <input type="number" placeholder="Credit Score">
+            <input type="number" placeholder="DTI (%)">
+            <input type="number" placeholder="LTV (%)">
+            <button>Evaluate</button>
+            <p>Decision: [Simulated Decision]</p>
+          </div>
+        </div>
+
+        <!-- RPA -->
+        <div class="tool-card">
+          <h3 class="collapsible">RPA Automation ▼</h3>
+          <div class="tool-content">
+            <p>Here's how SeraphAi bots automate your loan workflow:</p>
+            <ol>
+              <li><strong>Bot 1:</strong> Receives application and creates file in LOS</li>
+              <li><strong>Bot 2:</strong> Extracts and classifies uploaded documents</li>
+              <li><strong>Bot 3:</strong> Triggers credit and appraisal services</li>
+              <li><strong>Bot 4:</strong> Flags missing items and notifies users</li>
+              <li><strong>Bot 5:</strong> Updates CRM and milestone tracking</li>
+            </ol>
+            <p><em>All without human intervention.</em></p>
+          </div>
+        </div>
+
+        <!-- Compliance Checker -->
+        <div class="tool-card">
+          <h3 class="collapsible">Compliance Checker ▼</h3>
+          <div class="tool-content">
+            <p>Enter loan info for compliance check:</p>
+            <input type="number" placeholder="DTI (%)">
+            <input type="number" placeholder="LTV (%)">
+            <label><input type="checkbox"> RESPA Disclosure Sent</label><br>
+            <label><input type="checkbox"> HMDA Race Reported</label><br>
+            <label><input type="checkbox"> Income Verified</label><br>
+            <button>Run Check</button>
+            <p>[Flags or Compliant Result]</p>
+          </div>
+        </div>
+
+        <!-- Chatbot -->
+        <div class="tool-card">
+          <h3 class="collapsible">Chatbot Assistant ▼</h3>
+          <div class="tool-content">
+            <p>Chat with our AI assistant in the bottom right corner for guideline help and support.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Why SeraphAi -->
+    <section>
+      <h2>Why SeraphAi</h2>
+      <p>Faster closings. Fewer errors. Better margins. No more swivel-chair workflows.</p>
+    </section>
+
+    <!-- Demo Form -->
+    <section id="demo">
+      <h2>Request a Demo</h2>
+      <form action="https://formspree.io/f/mexample" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Tell us about your team or ask a question..." rows="4" required></textarea>
+        <button type="submit">Submit Request</button>
+      </form>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <h2>About Us</h2>
+      <p><strong>Abe Kahan</strong>, founder of SeraphAi, is a proven entrepreneur and financial technology executive with deep experience across mortgage banking, proptech, and AI-driven automation.</p>
+      <p><a href="https://www.linkedin.com/in/abe-kahan/" target="_blank">Connect on LinkedIn</a></p>
+    </section>
+
+    <footer class="footer">
+      &copy; 2025 SeraphAi. All rights reserved.
+    </footer>
   </div>
-  <!--
+
   <script src="https://cdn.botpress.cloud/webchat/v1/inject.js" async></script>
   <script>
     window.botpressWebChat = {
-      botId: "REPLACE_WITH_YOUR_BOT_ID",
+      botId: "your-bot-id",
       hostUrl: "https://cdn.botpress.cloud/webchat/v1",
       messagingUrl: "https://messaging.botpress.cloud",
-      clientId: "REPLACE_WITH_YOUR_BOT_ID",
+      clientId: "your-bot-id",
       enableConversationDeletion: true,
       showPoweredBy: false,
       botName: "SeraphAi Assistant"
     };
   </script>
-  -->
 </body>
 </html>
