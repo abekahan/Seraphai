@@ -3,5 +3,5 @@ services:
     name: seraphai-backend
     env: python
     buildCommand: ""
-    startCommand: "python seraphai_backend_full.py"
+    startCommand: "python seraphai_backend_with_cors.py"
     plan: free
