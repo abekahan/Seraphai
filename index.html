@@ -147,14 +147,6 @@ function calculateLeadScore() {
     document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
   })
   .catch(() => alert('Error scoring lead'));
-},
-    body: JSON.stringify({ credit, income, dti })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('leadScoreOutput').textContent = 'Score: ' + data.score;
-  })
-  .catch(() => alert('Error scoring lead'));
 }
 
 function runDocAI() {
@@ -191,14 +183,6 @@ function evaluateUnderwrite() {
     document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
   })
   .catch(() => alert('Error underwriting'));
-},
-    body: JSON.stringify({ credit, dti, ltv })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('underwriteDecision').textContent = 'Decision: ' + data.decision;
-  })
-  .catch(() => alert('Error underwriting'));
 }
 
 function runComplianceCheck() {
@@ -214,14 +198,6 @@ function runComplianceCheck() {
   fetch('https://seraphai-backend.onrender.com/compliance-check', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ dti, ltv, respa, hmda, income_verified })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('complianceResult').textContent = 'Result: ' + data.flags.join(', ');
-  })
-  .catch(() => alert('Error checking compliance'));
-},
     body: JSON.stringify({ dti, ltv, respa, hmda, income_verified })
   })
   .then(res => res.json())
