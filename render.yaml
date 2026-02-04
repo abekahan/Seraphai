@@ -2,6 +2,6 @@ services:
   - type: web
     name: seraphai-backend
     env: python
-    buildCommand: ""
-    startCommand: "python seraphai_backend_with_cors.py"
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python seraphai_backend_open_cors.py"
     plan: free
