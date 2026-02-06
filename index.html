@@ -71,6 +71,271 @@
       </div>
     </section>
 
+    <!-- CRYPTO PROSPECTING SECTION -->
+    <section id="crypto-prospecting" class="mb-20 border-t border-gray-200 pt-16">
+      <div class="flex items-center mb-6">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-semibold mr-3">NEW</div>
+        <h2 class="text-4xl font-bold text-gray-900 tracking-tight">Crypto Mortgage Prospecting</h2>
+      </div>
+      <p class="text-gray-600 mb-8 max-w-3xl">
+        <strong>Reverse Funnel Technology:</strong> Identify and score mortgage-qualified crypto holders using public blockchain data.
+        No wallet connection required - analyze any Ethereum address permissionlessly.
+      </p>
+
+      <div class="grid gap-8 lg:grid-cols-2">
+        <!-- Single Wallet Analysis -->
+        <div class="bg-gradient-to-br from-purple-50 to-white border border-purple-200 rounded-2xl p-6 shadow-md">
+          <h3 class="text-xl font-semibold mb-2 text-purple-900">Wallet Qualification Score</h3>
+          <p class="text-sm text-gray-500 mb-4">Enter any Ethereum wallet address to analyze mortgage qualification potential.</p>
+
+          <div class="relative">
+            <input type="text" id="prospect-wallet"
+              placeholder="0x..."
+              class="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm mb-3"
+              maxlength="42">
+            <span id="wallet-validation" class="absolute right-3 top-3 text-sm"></span>
+          </div>
+
+          <div class="flex gap-2 mb-4">
+            <button onclick="analyzeProspect()" class="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition font-semibold">
+              Analyze Wallet
+            </button>
+            <button onclick="runProspectDemo()" class="px-4 py-2 border border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition">
+              Demo
+            </button>
+          </div>
+
+          <!-- Results Display -->
+          <div id="prospect-results" class="hidden">
+            <div class="border-t border-purple-200 pt-4 mt-4">
+              <!-- Score Header -->
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="text-3xl font-bold" id="overall-score">--</div>
+                  <div class="text-sm text-gray-500">Qualification Score</div>
+                </div>
+                <div id="risk-tier-badge" class="px-4 py-2 rounded-full text-sm font-semibold"></div>
+              </div>
+
+              <!-- Score Breakdown -->
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm">
+                  <span>Wealth Score</span>
+                  <span id="wealth-score" class="font-semibold">--</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div id="wealth-bar" class="bg-green-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm">
+                  <span>Stability Score</span>
+                  <span id="stability-score" class="font-semibold">--</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div id="stability-bar" class="bg-blue-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm">
+                  <span>Behavior Score</span>
+                  <span id="behavior-score" class="font-semibold">--</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div id="behavior-bar" class="bg-purple-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm">
+                  <span>Liquidity Score</span>
+                  <span id="liquidity-score" class="font-semibold">--</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div id="liquidity-bar" class="bg-yellow-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Financial Estimates -->
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="bg-white p-3 rounded-lg border">
+                  <div class="text-gray-500">Est. Net Worth</div>
+                  <div id="est-networth" class="font-bold text-lg">--</div>
+                </div>
+                <div class="bg-white p-3 rounded-lg border">
+                  <div class="text-gray-500">Est. Income</div>
+                  <div id="est-income" class="font-bold text-lg">--</div>
+                </div>
+                <div class="bg-white p-3 rounded-lg border">
+                  <div class="text-gray-500">Max Mortgage</div>
+                  <div id="max-mortgage" class="font-bold text-lg text-green-600">--</div>
+                </div>
+                <div class="bg-white p-3 rounded-lg border">
+                  <div class="text-gray-500">Recommended LTV</div>
+                  <div id="rec-ltv" class="font-bold text-lg">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="prospect-loading" class="hidden text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <p class="mt-2 text-gray-500">Analyzing blockchain data...</p>
+          </div>
+
+          <div id="prospect-error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm"></div>
+        </div>
+
+        <!-- Batch Analysis -->
+        <div class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-200 rounded-2xl p-6 shadow-md">
+          <h3 class="text-xl font-semibold mb-2 text-indigo-900">Batch Prospect Discovery</h3>
+          <p class="text-sm text-gray-500 mb-4">Paste multiple wallet addresses (one per line) to find qualified prospects.</p>
+
+          <textarea id="batch-wallets"
+            placeholder="0x1234...&#10;0x5678...&#10;0xabcd..."
+            class="w-full px-4 py-3 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm mb-3 h-32"
+            ></textarea>
+
+          <div class="flex gap-4 mb-4">
+            <div class="flex-1">
+              <label class="text-xs text-gray-500">Min Value (USD)</label>
+              <input type="number" id="min-value" value="50000"
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+            <div class="flex-1">
+              <label class="text-xs text-gray-500">Min Score</label>
+              <input type="number" id="min-score" value="60"
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+          </div>
+
+          <button onclick="batchAnalyze()" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold mb-4">
+            Discover Qualified Prospects
+          </button>
+
+          <!-- Batch Results -->
+          <div id="batch-results" class="hidden">
+            <div class="border-t border-indigo-200 pt-4">
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-semibold">Qualified Prospects</span>
+                <span id="qualified-count" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">0</span>
+              </div>
+              <div id="prospects-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
+            </div>
+          </div>
+
+          <div id="batch-loading" class="hidden text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <p class="mt-2 text-gray-500">Scanning wallets...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Report Section -->
+      <div id="detailed-report" class="hidden mt-8 bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-semibold">Detailed Prospect Report</h3>
+          <button onclick="closeDetailedReport()" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Wallet Info -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-900 mb-3">Wallet Analysis</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Address</span>
+                <span id="report-address" class="font-mono text-xs truncate max-w-32">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">ETH Balance</span>
+                <span id="report-eth">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Total Value</span>
+                <span id="report-value" class="font-semibold">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Wallet Age</span>
+                <span id="report-age">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Behavior Type</span>
+                <span id="report-behavior" class="capitalize">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Token Count</span>
+                <span id="report-tokens">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">DeFi Protocols</span>
+                <span id="report-defi">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signals -->
+          <div class="bg-green-50 rounded-lg p-4">
+            <h4 class="font-semibold text-green-900 mb-3">Positive Signals</h4>
+            <ul id="positive-signals" class="space-y-2 text-sm text-green-800"></ul>
+          </div>
+
+          <!-- Risk Flags -->
+          <div class="bg-red-50 rounded-lg p-4">
+            <h4 class="font-semibold text-red-900 mb-3">Risk Flags</h4>
+            <ul id="risk-flags" class="space-y-2 text-sm text-red-800"></ul>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="mt-6 bg-blue-50 rounded-lg p-4">
+          <h4 class="font-semibold text-blue-900 mb-3">Recommendations</h4>
+          <ul id="recommendations" class="space-y-2 text-sm text-blue-800"></ul>
+        </div>
+
+        <!-- Contact Methods -->
+        <div class="mt-6 bg-purple-50 rounded-lg p-4">
+          <h4 class="font-semibold text-purple-900 mb-3">Outreach Options</h4>
+          <div id="contact-methods" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="mt-8 bg-gray-50 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">How Permissionless Prospecting Works</h3>
+        <div class="grid md:grid-cols-4 gap-4 text-sm">
+          <div class="flex items-start">
+            <div class="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2 flex-shrink-0">1</div>
+            <div>
+              <div class="font-semibold">Public Data</div>
+              <div class="text-gray-500">All analysis uses publicly available blockchain data - no wallet connection needed.</div>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2 flex-shrink-0">2</div>
+            <div>
+              <div class="font-semibold">On-Chain Analysis</div>
+              <div class="text-gray-500">We analyze holdings, transaction history, wallet age, and behavior patterns.</div>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2 flex-shrink-0">3</div>
+            <div>
+              <div class="font-semibold">Qualification Scoring</div>
+              <div class="text-gray-500">Proprietary algorithm scores prospects across wealth, stability, behavior, and liquidity.</div>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <div class="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2 flex-shrink-0">4</div>
+            <div>
+              <div class="font-semibold">Reverse Funnel</div>
+              <div class="text-gray-500">Proactively identify and reach qualified crypto holders before they come to you.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="demo" class="mb-20">
       <h2 class="text-3xl font-semibold text-gray-900 mb-6">Request a Demo</h2>
       <form action="https://formspree.io/f/mexample" method="POST" class="space-y-4 max-w-xl">
@@ -206,6 +471,332 @@ function runComplianceCheck() {
   })
   .catch(() => alert('Error checking compliance'));
 }
+
+// ========================================
+// CRYPTO PROSPECTING FUNCTIONS
+// ========================================
+
+const API_BASE = 'https://seraphai-backend.onrender.com';
+
+// Validate Ethereum address format
+function isValidEthAddress(address) {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+// Format currency
+function formatCurrency(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format(value);
+}
+
+// Get risk tier badge styling
+function getRiskTierStyle(tier) {
+  const styles = {
+    'prime': 'bg-green-100 text-green-800',
+    'near_prime': 'bg-blue-100 text-blue-800',
+    'subprime': 'bg-yellow-100 text-yellow-800',
+    'unqualified': 'bg-red-100 text-red-800'
+  };
+  return styles[tier] || 'bg-gray-100 text-gray-800';
+}
+
+// Analyze single prospect wallet
+async function analyzeProspect() {
+  const wallet = document.getElementById('prospect-wallet').value.trim();
+
+  if (!wallet) {
+    showProspectError('Please enter a wallet address');
+    return;
+  }
+
+  if (!isValidEthAddress(wallet)) {
+    showProspectError('Invalid Ethereum address format. Must be 0x followed by 40 hex characters.');
+    return;
+  }
+
+  showProspectLoading(true);
+  hideProspectResults();
+  hideProspectError();
+
+  try {
+    const response = await fetch(`${API_BASE}/prospect/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wallet_address: wallet })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to analyze wallet');
+    }
+
+    displayProspectResults(data);
+  } catch (error) {
+    showProspectError(error.message);
+  } finally {
+    showProspectLoading(false);
+  }
+}
+
+// Run demo analysis
+async function runProspectDemo() {
+  showProspectLoading(true);
+  hideProspectResults();
+  hideProspectError();
+
+  try {
+    const response = await fetch(`${API_BASE}/prospect/demo`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to load demo');
+    }
+
+    // Set demo address in input
+    document.getElementById('prospect-wallet').value = data.wallet_analysis.address;
+    displayProspectResults(data);
+  } catch (error) {
+    showProspectError(error.message);
+  } finally {
+    showProspectLoading(false);
+  }
+}
+
+// Display prospect results
+function displayProspectResults(data) {
+  const score = data.qualification_score;
+  const analysis = data.wallet_analysis;
+
+  // Update score display
+  document.getElementById('overall-score').textContent = score.overall_score.toFixed(1);
+
+  // Update risk tier badge
+  const tierBadge = document.getElementById('risk-tier-badge');
+  tierBadge.textContent = score.risk_tier.replace('_', ' ').toUpperCase();
+  tierBadge.className = `px-4 py-2 rounded-full text-sm font-semibold ${getRiskTierStyle(score.risk_tier)}`;
+
+  // Update component scores and bars
+  updateScoreBar('wealth', score.wealth_score);
+  updateScoreBar('stability', score.stability_score);
+  updateScoreBar('behavior', score.behavior_score);
+  updateScoreBar('liquidity', score.liquidity_score);
+
+  // Update financial estimates
+  document.getElementById('est-networth').textContent = formatCurrency(score.estimated_net_worth);
+  document.getElementById('est-income').textContent = formatCurrency(score.estimated_annual_income);
+  document.getElementById('max-mortgage').textContent = formatCurrency(score.max_mortgage_amount);
+  document.getElementById('rec-ltv').textContent = score.recommended_ltv + '%';
+
+  // Show results
+  document.getElementById('prospect-results').classList.remove('hidden');
+
+  // Populate detailed report
+  populateDetailedReport(data);
+}
+
+// Update score bar
+function updateScoreBar(name, value) {
+  document.getElementById(`${name}-score`).textContent = value.toFixed(1);
+  document.getElementById(`${name}-bar`).style.width = `${value}%`;
+}
+
+// Populate detailed report section
+function populateDetailedReport(data) {
+  const score = data.qualification_score;
+  const analysis = data.wallet_analysis;
+
+  // Wallet info
+  document.getElementById('report-address').textContent = analysis.address.slice(0, 10) + '...' + analysis.address.slice(-8);
+  document.getElementById('report-eth').textContent = analysis.eth_balance.toFixed(4) + ' ETH';
+  document.getElementById('report-value').textContent = formatCurrency(analysis.total_value_usd);
+  document.getElementById('report-age').textContent = analysis.wallet_age_days + ' days';
+  document.getElementById('report-behavior').textContent = analysis.behavior_type.replace('_', ' ');
+  document.getElementById('report-tokens').textContent = analysis.token_count;
+  document.getElementById('report-defi').textContent = analysis.defi_protocol_count;
+
+  // Positive signals
+  const signalsList = document.getElementById('positive-signals');
+  signalsList.innerHTML = score.positive_signals.length > 0
+    ? score.positive_signals.map(s => `<li class="flex items-start"><span class="text-green-500 mr-2">&#10003;</span>${s}</li>`).join('')
+    : '<li class="text-gray-500">No strong positive signals</li>';
+
+  // Risk flags
+  const flagsList = document.getElementById('risk-flags');
+  flagsList.innerHTML = score.risk_flags.length > 0
+    ? score.risk_flags.map(f => `<li class="flex items-start"><span class="text-red-500 mr-2">&#9888;</span>${f}</li>`).join('')
+    : '<li class="text-green-600">No significant risk flags</li>';
+
+  // Recommendations
+  const recsList = document.getElementById('recommendations');
+  recsList.innerHTML = score.recommendations.map(r => `<li class="flex items-start"><span class="text-blue-500 mr-2">&#8594;</span>${r}</li>`).join('');
+
+  // Contact methods
+  const contactDiv = document.getElementById('contact-methods');
+  contactDiv.innerHTML = score.contact_methods.map(c =>
+    `<div class="bg-white px-3 py-2 rounded border text-xs">
+      <span class="font-semibold">${c.type.replace('_', ' ')}</span>
+      <span class="text-gray-500 ml-1">${c.note}</span>
+    </div>`
+  ).join('');
+
+  // Show detailed report
+  document.getElementById('detailed-report').classList.remove('hidden');
+}
+
+// Close detailed report
+function closeDetailedReport() {
+  document.getElementById('detailed-report').classList.add('hidden');
+}
+
+// Batch analyze wallets
+async function batchAnalyze() {
+  const walletsText = document.getElementById('batch-wallets').value.trim();
+  const minValue = parseFloat(document.getElementById('min-value').value) || 50000;
+  const minScore = parseFloat(document.getElementById('min-score').value) || 60;
+
+  if (!walletsText) {
+    alert('Please enter at least one wallet address');
+    return;
+  }
+
+  // Parse wallet addresses
+  const wallets = walletsText.split('\n')
+    .map(w => w.trim())
+    .filter(w => w.length > 0);
+
+  // Validate addresses
+  const invalidAddresses = wallets.filter(w => !isValidEthAddress(w));
+  if (invalidAddresses.length > 0) {
+    alert(`Invalid addresses found:\n${invalidAddresses.slice(0, 3).join('\n')}${invalidAddresses.length > 3 ? '\n...' : ''}`);
+    return;
+  }
+
+  if (wallets.length > 50) {
+    alert('Maximum 50 addresses per batch');
+    return;
+  }
+
+  showBatchLoading(true);
+  hideBatchResults();
+
+  try {
+    const response = await fetch(`${API_BASE}/prospect/discover`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        wallet_addresses: wallets,
+        min_value_usd: minValue,
+        min_score: minScore
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to analyze wallets');
+    }
+
+    displayBatchResults(data);
+  } catch (error) {
+    alert('Error: ' + error.message);
+  } finally {
+    showBatchLoading(false);
+  }
+}
+
+// Display batch results
+function displayBatchResults(data) {
+  document.getElementById('qualified-count').textContent = data.qualified_count;
+
+  const listDiv = document.getElementById('prospects-list');
+
+  if (data.prospects.length === 0) {
+    listDiv.innerHTML = '<div class="text-sm text-gray-500 text-center py-4">No qualified prospects found matching your criteria.</div>';
+  } else {
+    listDiv.innerHTML = data.prospects.map(p => `
+      <div class="bg-white p-3 rounded-lg border border-gray-200 hover:border-indigo-300 cursor-pointer transition"
+           onclick="loadProspectDetails('${p.wallet_address}')">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="font-mono text-xs text-gray-600">${p.wallet_address.slice(0, 10)}...${p.wallet_address.slice(-8)}</div>
+            <div class="text-sm font-semibold mt-1">${formatCurrency(p.estimated_value)}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-lg font-bold text-indigo-600">${p.qualification_score.toFixed(1)}</div>
+            <div class="text-xs ${getRiskTierStyle(p.risk_tier)} px-2 py-0.5 rounded-full">${p.risk_tier.replace('_', ' ')}</div>
+          </div>
+        </div>
+        <div class="mt-2 flex gap-2">
+          <span class="text-xs bg-gray-100 px-2 py-0.5 rounded">${p.behavior_type.replace('_', ' ')}</span>
+          <span class="text-xs ${p.priority === 'high' ? 'bg-green-100 text-green-800' : p.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100'} px-2 py-0.5 rounded">${p.priority} priority</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('batch-results').classList.remove('hidden');
+}
+
+// Load prospect details from batch list
+async function loadProspectDetails(address) {
+  document.getElementById('prospect-wallet').value = address;
+  await analyzeProspect();
+
+  // Scroll to results
+  document.getElementById('crypto-prospecting').scrollIntoView({ behavior: 'smooth' });
+}
+
+// UI helper functions
+function showProspectLoading(show) {
+  document.getElementById('prospect-loading').classList.toggle('hidden', !show);
+}
+
+function hideProspectResults() {
+  document.getElementById('prospect-results').classList.add('hidden');
+}
+
+function showProspectError(message) {
+  const errorDiv = document.getElementById('prospect-error');
+  errorDiv.textContent = message;
+  errorDiv.classList.remove('hidden');
+}
+
+function hideProspectError() {
+  document.getElementById('prospect-error').classList.add('hidden');
+}
+
+function showBatchLoading(show) {
+  document.getElementById('batch-loading').classList.toggle('hidden', !show);
+}
+
+function hideBatchResults() {
+  document.getElementById('batch-results').classList.add('hidden');
+}
+
+// Wallet input validation on typing
+document.addEventListener('DOMContentLoaded', function() {
+  const walletInput = document.getElementById('prospect-wallet');
+  const validationSpan = document.getElementById('wallet-validation');
+
+  if (walletInput) {
+    walletInput.addEventListener('input', function() {
+      const value = this.value.trim();
+      if (!value) {
+        validationSpan.textContent = '';
+      } else if (isValidEthAddress(value)) {
+        validationSpan.textContent = '&#10003;';
+        validationSpan.className = 'absolute right-3 top-3 text-green-500';
+      } else {
+        validationSpan.textContent = '&#10007;';
+        validationSpan.className = 'absolute right-3 top-3 text-red-500';
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
