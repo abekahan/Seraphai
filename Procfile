@@ -1,1 +1,1 @@
-web: python seraphai_backend_full.py
+web: python app.py
